@@ -1,0 +1,22 @@
+{
+  "name": "spendwise",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal finance and expense-splitting application",
+  "type": "module",
+  "workspaces": [
+    "shared",
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev:server": "npm run dev --workspace server",
+    "dev:client": "npm run dev --workspace client",
+    "build": "npm run build --workspace client",
+    "clean": "rm -rf client/node_modules/.vite client/dist && echo 'Cleared Vite cache and build output.'",
+    "reinstall": "rm -rf node_modules client/node_modules server/node_modules client/node_modules/.vite && npm install"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

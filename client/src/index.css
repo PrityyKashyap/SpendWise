@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+/*
+ * SpendWise design tokens (ARCHITECTURE.md §4.6).
+ *
+ * Tailwind v4 is configured in CSS, not a JS config file. Anything declared
+ * under @theme becomes a utility class automatically: --color-income here
+ * gives you text-income, bg-income, border-income, and so on.
+ */
+@theme {
+  /* Semantic money colours — meaning, not decoration. Used consistently so a
+     figure's colour always tells you its direction. */
+  --color-income: oklch(0.596 0.145 163.2);   /* emerald — money in       */
+  --color-expense: oklch(0.586 0.222 17.6);   /* rose    — money out      */
+  --color-owed-to-me: oklch(0.596 0.145 163.2); /* they owe me (an asset) */
+  --color-i-owe: oklch(0.681 0.162 75.8);     /* amber   — I owe (a debt) */
+
+  /* Brand */
+  --color-brand: oklch(0.511 0.226 276.9);    /* indigo */
+  --color-brand-soft: oklch(0.962 0.018 272.3);
+
+  /* Neutrals */
+  --color-surface: oklch(1 0 0);
+  --color-canvas: oklch(0.984 0.003 247.9);
+  --color-ink: oklch(0.208 0.042 265.7);
+  --color-ink-muted: oklch(0.554 0.041 257.4);
+  --color-line: oklch(0.929 0.013 255.5);
+}
+
+/*
+ * Money must always render with tabular figures so digits line up vertically
+ * in lists and tables. Without this, a column of amounts looks ragged — the
+ * difference between "spreadsheet" and "fintech product" (IDEA.md §26).
+ */
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+html {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}

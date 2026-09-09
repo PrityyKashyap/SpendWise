@@ -1,0 +1,34 @@
+# Render blueprint for the SpendWise API.
+#
+# Why Render for the backend rather than Vercel: this is a long-running Express
+# process with a Mongoose connection pool. On a serverless platform every cold
+# start opens a new pool, which exhausts Atlas' connection cap and adds latency
+# to the first request after each idle period. A persistent Node process is the
+# right shape for this app.
+services:
+  - type: web
+    name: spendwise-api
+    runtime: node
+    plan: free
+    region: singapore # closest to an India-focused user base
+    rootDir: .
+    # The repo is an npm workspace, so install from the root to get the
+    # hoisted dependencies and the @spendwise/shared symlink.
+    buildCommand: npm install
+    startCommand: npm start --workspace server
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5001
+      # Set these in the Render dashboard — never commit them.
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      # The deployed client origin, e.g. https://spendwise.vercel.app
+      - key: CLIENT_URL
+        sync: false

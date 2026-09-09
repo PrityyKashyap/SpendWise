@@ -1,0 +1,4 @@
+# Netlify equivalent of the SPA rewrite in vercel.json.
+# Without this, refreshing /dashboard returns 404 — the file does not exist,
+# because React Router resolves the path in the browser.
+/*    /index.html   200
