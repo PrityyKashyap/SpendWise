@@ -25,7 +25,13 @@ export function logout() {
  * `skipAuth` avoids attaching a stale access token we already know is useless.
  */
 export function refresh() {
-  return api.post('/auth/refresh', null, { skipAuth: true });
+  // An empty object, not null. Axios serialises `null` to the literal string
+  // "null" and still sends Content-Type: application/json, which express.json()
+  // rejects in strict mode (only objects and arrays are valid top-level JSON).
+  // That made every session restore fail with a 500 — so reloading the page, or
+  // any silent refresh after the 15-minute access token expired, logged the
+  // user out.
+  return api.post('/auth/refresh', {}, { skipAuth: true });
 }
 
 /** GET /auth/me → { user } */

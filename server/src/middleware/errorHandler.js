@@ -33,6 +33,17 @@ export function errorHandler(err, req, res, next) {
     statusCode = 400;
     code = 'INVALID_ID';
     message = 'That identifier is not valid.';
+  } else if (typeof err.type === 'string' && err.type.startsWith('entity.')) {
+    // body-parser rejected the request body — malformed JSON, too large, or an
+    // unsupported charset. These carry their own status code and are the
+    // caller's mistake; reporting them as 500 both misleads the client and
+    // buries genuine server bugs in the error log.
+    statusCode = err.status ?? err.statusCode ?? 400;
+    const tooLarge = err.type === 'entity.too.large';
+    code = tooLarge ? 'PAYLOAD_TOO_LARGE' : 'INVALID_BODY';
+    message = tooLarge
+      ? 'That request was too large.'
+      : 'The request body could not be read.';
   } else if (err.code === 11000) {
     // Mongo duplicate key
     statusCode = 409;
