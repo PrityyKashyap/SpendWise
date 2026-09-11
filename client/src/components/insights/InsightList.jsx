@@ -18,20 +18,20 @@ const STYLES = {
  * hence the closing note.
  */
 export default function InsightList({ data, isLoading }) {
-  if (isLoading) return <Skeleton className="h-40" />;
+  if (isLoading) return <Skeleton className="h-40 rounded-2xl" />;
 
   // Nothing worth saying is better than filler that trains people to ignore
   // the panel.
   if (!data?.insights?.length) return null;
 
   return (
-    <Card className="p-5">
+    <Card className="anim-rise p-5" style={{ animationDelay: '280ms' }}>
       <div className="mb-3 flex items-center gap-2">
-        <Lightbulb className="h-4 w-4 text-brand" aria-hidden="true" />
+        <Lightbulb className="h-4 w-4 animate-pulse text-brand" aria-hidden="true" />
         <h2 className="text-sm font-semibold text-ink">What changed this month</h2>
       </div>
 
-      <ul className="space-y-2.5">
+      <ul className="stagger-in space-y-2.5">
         {data.insights.map((insight) => {
           const style = STYLES[insight.type] ?? STYLES.neutral;
           const Icon = style.icon;
