@@ -22,6 +22,9 @@ import Budgets from './pages/Budgets.jsx';
 import Profile from './pages/Profile.jsx';
 import SystemStatus from './pages/SystemStatus.jsx';
 import NotFound from './pages/NotFound.jsx';
+import OfflineBanner from './components/pwa/OfflineBanner.jsx';
+import InstallPrompt from './components/pwa/InstallPrompt.jsx';
+import PwaUpdatePrompt from './components/pwa/PwaUpdatePrompt.jsx';
 
 /**
  * Routes (ARCHITECTURE.md §4.1).
@@ -33,6 +36,12 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        {/* App-level chrome: connection state, install offer and update
+            prompt sit outside the routes so they survive navigation. */}
+        <OfflineBanner />
+        <PwaUpdatePrompt />
+        <InstallPrompt />
+
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/status" element={<SystemStatus />} />

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { z } from 'zod';
 
 /**
@@ -13,6 +13,16 @@ export function useForm({ initialValues, schema, onSubmit, transform }) {
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  /*
+   * A ref as well as state, because the state alone cannot stop a double
+   * submit. Disabling the button covers the second click, but pressing Enter
+   * in a field submits the form directly — and two quick presses both run
+   * before React has re-rendered with isSubmitting: true. On this app that
+   * means the same expense posted twice. A ref updates synchronously, so the
+   * second call is rejected on the spot.
+   */
+  const inFlightRef = useRef(false);
 
   const handleChange = useCallback((event) => {
     const { name, value } = event.target;
@@ -51,6 +61,8 @@ export function useForm({ initialValues, schema, onSubmit, transform }) {
         }
       }
 
+      if (inFlightRef.current) return;
+      inFlightRef.current = true;
       setIsSubmitting(true);
       try {
         await onSubmit(payload);
@@ -60,6 +72,7 @@ export function useForm({ initialValues, schema, onSubmit, transform }) {
         if (error.fields) setErrors(error.fields);
         else setErrors({ _form: error.message || 'Something went wrong.' });
       } finally {
+        inFlightRef.current = false;
         setIsSubmitting(false);
       }
     },
