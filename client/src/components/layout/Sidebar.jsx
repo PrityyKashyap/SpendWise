@@ -1,4 +1,5 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
+import Logo from '../brand/Logo.jsx';
 import { LayoutDashboard, ArrowLeftRight, Users, ChartPie, FileText, Handshake, Target } from 'lucide-react';
 
 /** Routes that exist today. Later phases add Groups, Analytics, Budgets. */
@@ -17,9 +18,14 @@ export default function Sidebar() {
   return (
     <aside className="hidden w-56 shrink-0 border-r border-line bg-surface lg:block">
       <div className="sticky top-0 flex h-screen flex-col p-4">
-        <div className="px-2 py-3">
-          <span className="text-base font-semibold tracking-tight text-ink">SpendWise</span>
-        </div>
+        <Link
+          to="/"
+          className="rounded-lg px-2 py-3 focus-visible:outline-2 focus-visible:outline-offset-2
+                     focus-visible:outline-brand"
+        >
+          <Logo markClassName="h-8 w-8" />
+          <span className="sr-only">SpendWise home</span>
+        </Link>
 
         <nav className="mt-4 flex flex-col gap-1">
           {NAV_ITEMS.map(({ to, label, icon: Icon, phase }) =>

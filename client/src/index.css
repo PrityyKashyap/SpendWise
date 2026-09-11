@@ -6,25 +6,32 @@
  * Tailwind v4 is configured in CSS, not a JS config file. Anything declared
  * under @theme becomes a utility class automatically: --color-income here
  * gives you text-income, bg-income, border-income, and so on.
+ *
+ * The brand refresh changes token VALUES, not token NAMES. Every existing
+ * component already speaks in bg-brand / text-ink / border-line, so re-pointing
+ * the tokens re-skins the whole product without editing eighty files — and
+ * without any risk of a find-and-replace touching logic.
  */
 @theme {
   /* Semantic money colours — meaning, not decoration. Used consistently so a
      figure's colour always tells you its direction. */
-  --color-income: oklch(0.596 0.145 163.2);   /* emerald — money in       */
-  --color-expense: oklch(0.586 0.222 17.6);   /* rose    — money out      */
-  --color-owed-to-me: oklch(0.596 0.145 163.2); /* they owe me (an asset) */
-  --color-i-owe: oklch(0.681 0.162 75.8);     /* amber   — I owe (a debt) */
+  --color-income: #16B981;      /* emerald — money in       */
+  --color-expense: #EF4444;     /* red     — money out      */
+  --color-owed: #16B981;        /* they owe me (an asset)   */
+  --color-i-owe: #F59E0B;       /* amber   — I owe (a debt) */
 
   /* Brand */
-  --color-brand: oklch(0.511 0.226 276.9);    /* indigo */
-  --color-brand-soft: oklch(0.962 0.018 272.3);
+  --color-brand: #5B4BFF;       /* primary indigo-violet    */
+  --color-brand-soft: #EEEAFE;  /* lavender wash            */
+  --color-brand-deep: #171B4D;  /* near-navy, for dark UI   */
+  --color-brand-purple: #7C5CFC;/* lighter accent purple    */
 
   /* Neutrals */
-  --color-surface: oklch(1 0 0);
-  --color-canvas: oklch(0.984 0.003 247.9);
-  --color-ink: oklch(0.208 0.042 265.7);
-  --color-ink-muted: oklch(0.554 0.041 257.4);
-  --color-line: oklch(0.929 0.013 255.5);
+  --color-surface: #FFFFFF;
+  --color-canvas: #F8FAFC;
+  --color-ink: #171B4D;
+  --color-ink-muted: #64748B;
+  --color-line: #E7E9F2;
 }
 
 /*
@@ -40,4 +47,99 @@ html {
   background-color: var(--color-canvas);
   color: var(--color-ink);
   -webkit-font-smoothing: antialiased;
+  /* Powers the landing page's "Explore Features" jump. */
+  scroll-behavior: smooth;
+  /* Stops the sticky navbar from covering a section it scrolls to. */
+  scroll-padding-top: 5.5rem;
+}
+
+/* ---------------------------------------------------------------------------
+ * Landing-page motion.
+ *
+ * Kept to three primitives — reveal, float, draw — because the brief asks for
+ * "subtle premium", and a page with eight different animations reads as a
+ * template, not a product.
+ * ------------------------------------------------------------------------- */
+
+/* Scroll reveal. The element starts shifted and transparent; <Reveal> adds
+   .is-visible when the IntersectionObserver fires. */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Floating hero cards. Two speeds so they never move in lockstep, which is
+   what makes drifting elements look mechanical. */
+@keyframes sw-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-9px); }
+}
+
+.float-slow { animation: sw-float 6s ease-in-out infinite; }
+.float-fast { animation: sw-float 4.5s ease-in-out infinite; }
+
+/* Chart reveal: a stroked path draws itself in. */
+@keyframes sw-draw {
+  from { stroke-dashoffset: var(--dash, 400); }
+  to   { stroke-dashoffset: 0; }
+}
+
+.draw-line {
+  stroke-dasharray: var(--dash, 400);
+  animation: sw-draw 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Progress ring: constant dash array, animated offset — see MoneyHealth.jsx. */
+@keyframes sw-ring {
+  from { stroke-dashoffset: var(--ring-from); }
+  to   { stroke-dashoffset: var(--ring-to); }
+}
+
+.draw-ring {
+  animation: sw-ring 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Bars grow from their baseline. */
+@keyframes sw-rise {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+.rise-bar {
+  transform-origin: bottom;
+  animation: sw-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+/*
+ * Motion is decoration here, so all of it is optional. Anything that conveys
+ * meaning (the reveal's final state) must survive being switched off — hence
+ * opacity/transform are reset rather than the animation simply removed.
+ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  .reveal,
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .float-slow,
+  .float-fast,
+  .draw-line,
+  .draw-ring,
+  .rise-bar {
+    animation: none;
+  }
+
+  .draw-line { stroke-dasharray: none; }
 }

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <title>SpendWise</title>
+  <!-- App icon: the wallet reversed out of a solid brand tile. The tile is what
+       makes it hold up as a home-screen or PWA icon — a transparent mark
+       disappears against a dark wallpaper. -->
+  <rect width="64" height="64" rx="14" fill="#5B4BFF"/>
+  <g transform="translate(6.4 6.7) scale(0.823)">
+    <g transform="rotate(-7 32 32)"><rect x="27" y="7" width="31" height="25" rx="11" fill="#E4DEFF"/></g>
+    <rect x="4.5" y="16" width="45" height="41" rx="15" fill="#FFFFFF"/>
+    <rect x="10" y="22.5" width="35" height="14" rx="7" fill="#5533D6"/>
+    <rect x="34.5" y="36" width="22" height="15.5" rx="7.75" fill="#E4DEFF" stroke="#5533D6" stroke-width="2.8"/>
+    <circle cx="45.5" cy="43.75" r="3.5" fill="#5533D6"/>
+  </g>
+</svg>
